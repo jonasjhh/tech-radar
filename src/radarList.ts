@@ -33,7 +33,20 @@ export class RadarList {
     items.forEach(item => {
       const listItem = document.createElement('li');
       listItem.className = 'tech-item';
-      listItem.textContent = item.name;
+
+      const nameSpan = document.createElement('span');
+      nameSpan.className = 'tech-name';
+      nameSpan.textContent = item.name;
+
+      listItem.appendChild(nameSpan);
+
+      if (item.category) {
+        const categorySpan = document.createElement('span');
+        categorySpan.className = 'tech-category';
+        categorySpan.textContent = item.category;
+        listItem.appendChild(categorySpan);
+      }
+
       list.appendChild(listItem);
     });
 

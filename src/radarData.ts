@@ -1,80 +1,83 @@
 export const radarData = `# Observere
-- Deno 2.0
-- Go
-- GraalVM
-- Java 25
-- Rust
-- WebAssembly
-- Zig
+- Deno 2.0 [Lang]
+- Go [Lang]
+- GraalVM [Plat]
+- Java 25 [Lang]
+- Rust [Lang]
+- WebAssembly [Plat]
+- Zig [Lang]
 
 # Prøve
-- ArgoCD
-- Backstage
-- Crossplane
-- Grafana
-- Helm
-- Jaeger
-- OpenTelemetry
-- Pact
-- Playwright
-- Prometheus
-- Terraform
+- ArgoCD [Tool]
+- Backstage [Plat]
+- Crossplane [Infra]
+- Grafana [Tool]
+- Helm [Tool]
+- Jaeger [Tool]
+- OpenTelemetry [Lib]
+- Pact [Tool]
+- Playwright [Tool]
+- Prometheus [Tool]
+- Terraform [Tool]
 
 # Bruke
-- Deno
-- Docker
-- Elasticsearch
-- ELSA
-- Flyway
-- Git
-- GitHub Actions
-- Gradle
-- GraphQL
-- Istio
-- Java 21
-- Jest
-- JSON
-- JUnit
-- Kafka
-- Keycloak
-- Kibana
-- Kotlin
-- Ktor
-- Kubernetes
-- Logstash
-- Maven
-- Nginx
-- Node.js
-- OAuth2/OIDC
-- OpenAPI
-- OpenShift
-- pnpm
-- PostgreSQL
-- Python 3
-- RabbitMQ
-- React
-- REST
-- Shell scripting
-- SonarQube
-- Spring Boot
-- SQL
-- S3
-- TypeScript
-- Vault
-- YAML
+- Deno [Lang]
+- Docker [Tool]
+- Elasticsearch [DB]
+- ELSA [Plat]
+- Flyway [Tool]
+- Git [Tool]
+- GitHub Actions [Tool]
+- Gradle [Tool]
+- GraphQL [Proto]
+- Istio [Infra]
+- Java 21 [Lang]
+- Jest [Tool]
+- JSON [Format]
+- JUnit [Tool]
+- Kafka [Plat]
+- Keycloak [Plat]
+- Kibana [Tool]
+- Kotlin [Lang]
+- Ktor [FW]
+- Kubernetes [Plat]
+- Logstash [Tool]
+- Maven [Tool]
+- Nginx [Tool]
+- Node.js [Lang]
+- OAuth2/OIDC [Proto]
+- OpenAPI [Proto]
+- OpenShift [Plat]
+- pnpm [Tool]
+- PostgreSQL [DB]
+- Python 3 [Lang]
+- RabbitMQ [Plat]
+- React [Lib]
+- REST [Proto]
+- SAST [Tool]
+- DAST [Tool]
+- Dependabot [Tool]
+- Dependency Management [Tool]
+- Shell scripting [Lang]
+- Spring Boot [FW]
+- SQL [Lang]
+- S3 [Plat]
+- TypeScript [Lang]
+- Vault [Tool]
+- YAML [Format]
 
 # Avvikle
-- Active MQ
-- Angular
-- Apache Camel
-- FTP
-- Java 8
-- Java 11
-- Java 17
-- Jenkins
-- jQuery
-- Python 2
-- SOAP
-- Vue
-- XML over JSON
+- Active MQ [Plat]
+- Angular [FW]
+- Apache Camel [FW]
+- FTP [Proto]
+- Java 8 [Lang]
+- Java 11 [Lang]
+- Java 17 [Lang]
+- Jenkins [Tool]
+- jQuery [Lib]
+- Python 2 [Lang]
+- SOAP [Proto]
+- Vue [FW]
+- XML over JSON [Format]
 `;

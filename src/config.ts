@@ -1,3 +1,5 @@
+import { SEMANTIC_COLORS, COLORS } from './colors';
+
 export interface PhaseConfig {
   key: 'observere' | 'prøve' | 'bruke' | 'avvikle';
   title: string;
@@ -7,10 +9,10 @@ export interface PhaseConfig {
 }
 
 export const PHASE_CONFIGS: PhaseConfig[] = [
-  { key: 'observere', title: 'Observere', color: '#3b82f6', startAngle: Math.PI, endAngle: 3 * Math.PI / 2 },
-  { key: 'prøve', title: 'Prøve', color: '#eab308', startAngle: 3 * Math.PI / 2, endAngle: 2 * Math.PI },
-  { key: 'bruke', title: 'Bruke', color: '#10b981', startAngle: 0, endAngle: Math.PI / 2 },
-  { key: 'avvikle', title: 'Avvikle', color: '#ef4444', startAngle: Math.PI / 2, endAngle: Math.PI },
+  { key: 'observere', title: 'Observere', color: SEMANTIC_COLORS.phase.observere, startAngle: Math.PI, endAngle: 3 * Math.PI / 2 },
+  { key: 'prøve', title: 'Prøve', color: SEMANTIC_COLORS.phase.prøve, startAngle: 3 * Math.PI / 2, endAngle: 2 * Math.PI },
+  { key: 'bruke', title: 'Bruke', color: SEMANTIC_COLORS.phase.bruke, startAngle: 0, endAngle: Math.PI / 2 },
+  { key: 'avvikle', title: 'Avvikle', color: SEMANTIC_COLORS.phase.avvikle, startAngle: Math.PI / 2, endAngle: Math.PI },
 ];
 
 export const CANVAS_CONFIG = {
@@ -24,13 +26,15 @@ export const CANVAS_CONFIG = {
 } as const;
 
 export const LABEL_CONFIG = {
-  font: '12px sans-serif',
-  padding: 6,
-  height: 16,
-  borderRadius: 4,
-  backgroundColor: 'white',
-  textColor: '#1f2937',
+  font: 'bold 11px sans-serif',
+  padding: 8,
+  height: 14,
+  borderRadius: 6,
+  backgroundColor: COLORS.white,
+  textColor: COLORS.black,
   lineWidth: 2,
+  shadowBlur: 4,
+  shadowColor: 'rgba(16, 2, 0, 0.15)',
 } as const;
 
 export const TITLE_CONFIG = {

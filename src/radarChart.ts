@@ -41,15 +41,28 @@ export class RadarChart {
   }
 
   private drawQuadrant(phase: typeof PHASE_CONFIGS[0]): void {
+    // Draw gradient fill
+    const gradient = this.ctx.createRadialGradient(
+      this.centerX, this.centerY, 0,
+      this.centerX, this.centerY, this.radius
+    );
+    gradient.addColorStop(0, phase.color + '10');
+    gradient.addColorStop(1, phase.color + '30');
+
     this.ctx.beginPath();
     this.ctx.moveTo(this.centerX, this.centerY);
     this.ctx.arc(this.centerX, this.centerY, this.radius, phase.startAngle, phase.endAngle);
     this.ctx.closePath();
-    this.ctx.fillStyle = phase.color + '20';
+    this.ctx.fillStyle = gradient;
     this.ctx.fill();
+
+    // Draw border with shadow
+    this.ctx.shadowBlur = 4;
+    this.ctx.shadowColor = 'rgba(16, 2, 0, 0.1)';
     this.ctx.strokeStyle = phase.color;
-    this.ctx.lineWidth = 2;
+    this.ctx.lineWidth = 3;
     this.ctx.stroke();
+    this.ctx.shadowBlur = 0;
   }
 
   private drawPhaseTitle(phase: typeof PHASE_CONFIGS[0]): void {
@@ -133,10 +146,20 @@ export class RadarChart {
     const boxX = x - width / 2;
     const boxY = y - height / 2;
 
+    // Draw shadow
+    this.ctx.shadowBlur = LABEL_CONFIG.shadowBlur;
+    this.ctx.shadowColor = LABEL_CONFIG.shadowColor;
+    this.ctx.shadowOffsetY = 2;
+
     // Draw rounded rectangle
     drawRoundedRect(this.ctx, boxX, boxY, width, height, LABEL_CONFIG.borderRadius);
     this.ctx.fillStyle = LABEL_CONFIG.backgroundColor;
     this.ctx.fill();
+
+    this.ctx.shadowBlur = 0;
+    this.ctx.shadowOffsetY = 0;
+
+    // Draw colored border
     this.ctx.strokeStyle = color;
     this.ctx.lineWidth = LABEL_CONFIG.lineWidth;
     this.ctx.stroke();
@@ -150,9 +173,32 @@ export class RadarChart {
   }
 
   private drawCenter(): void {
+    // Draw outer glow (using Deep Teal)
+    const gradient = this.ctx.createRadialGradient(
+      this.centerX, this.centerY, 0,
+      this.centerX, this.centerY, 12
+    );
+    gradient.addColorStop(0, 'rgba(77, 100, 99, 0.4)');
+    gradient.addColorStop(1, 'rgba(77, 100, 99, 0)');
+
     this.ctx.beginPath();
-    this.ctx.arc(this.centerX, this.centerY, 5, 0, 2 * Math.PI);
-    this.ctx.fillStyle = LABEL_CONFIG.textColor;
+    this.ctx.arc(this.centerX, this.centerY, 12, 0, 2 * Math.PI);
+    this.ctx.fillStyle = gradient;
+    this.ctx.fill();
+
+    // Draw center circle with shadow (using Dark Blue Gray)
+    this.ctx.shadowBlur = 4;
+    this.ctx.shadowColor = 'rgba(16, 2, 0, 0.3)';
+    this.ctx.beginPath();
+    this.ctx.arc(this.centerX, this.centerY, 6, 0, 2 * Math.PI);
+    this.ctx.fillStyle = '#354754';
+    this.ctx.fill();
+    this.ctx.shadowBlur = 0;
+
+    // Draw inner highlight
+    this.ctx.beginPath();
+    this.ctx.arc(this.centerX, this.centerY - 1, 3, 0, Math.PI, true);
+    this.ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
     this.ctx.fill();
   }
 }

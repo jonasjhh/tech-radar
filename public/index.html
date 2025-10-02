@@ -1,33 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="no">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tech Radar</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            line-height: 1.6;
-        }
-        h1 {
-            color: #333;
-        }
-        .container {
-            background: #f4f4f4;
-            padding: 20px;
-            border-radius: 5px;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
-    <div class="container">
-        <h1>Welcome to Tech Radar</h1>
-        <p>This is a GitHub Pages project with TypeScript, ESLint, and Jest.</p>
-        <p id="demo"></p>
+    <div class="chart-container">
+        <h1>Tech Radar</h1>
+        <canvas id="radar-chart"></canvas>
     </div>
-    <script src="bundle.js"></script>
+    <div id="radar-container"></div>
+    <script type="module" src="dist/main.js"></script>
 </body>
+
 </html>

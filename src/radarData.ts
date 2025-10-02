@@ -46,6 +46,7 @@ export const radarData = `# Observere
 - Nginx
 - Node.js
 - OAuth2/OIDC
+- OpenAPI
 - OpenShift
 - pnpm
 - PostgreSQL
@@ -53,11 +54,11 @@ export const radarData = `# Observere
 - RabbitMQ
 - React
 - REST
-- Shell/Scripting
+- Shell scripting
 - SonarQube
 - Spring Boot
 - SQL
-- Swagger/OpenAPI
+- S3
 - TypeScript
 - Vault
 - YAML

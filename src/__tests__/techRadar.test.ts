@@ -1,4 +1,4 @@
-import { parseRadarData } from './techRadar';
+import { parseRadarData } from '../utils/techRadar';
 
 describe('parseRadarData', () => {
   it('should parse basic tech radar data', () => {
@@ -13,7 +13,7 @@ describe('parseRadarData', () => {
 - JavaScript
 - React
 
-# Avvikle
+# Unngå
 - jQuery`;
 
     const result = parseRadarData(content);
@@ -22,15 +22,15 @@ describe('parseRadarData', () => {
     expect(result.observere[0]).toEqual({ name: 'Rust', phase: 'Observere' });
     expect(result.observere[1]).toEqual({ name: 'Deno', phase: 'Observere' });
 
-    expect(result.prøve).toHaveLength(1);
-    expect(result.prøve[0]).toEqual({ name: 'TypeScript', phase: 'Prøve' });
+    expect(result.prove).toHaveLength(1);
+    expect(result.prove[0]).toEqual({ name: 'TypeScript', phase: 'Prove' });
 
     expect(result.bruke).toHaveLength(2);
     expect(result.bruke[0]).toEqual({ name: 'JavaScript', phase: 'Bruke' });
     expect(result.bruke[1]).toEqual({ name: 'React', phase: 'Bruke' });
 
-    expect(result.avvikle).toHaveLength(1);
-    expect(result.avvikle[0]).toEqual({ name: 'jQuery', phase: 'Avvikle' });
+    expect(result.unnga).toHaveLength(1);
+    expect(result.unnga[0]).toEqual({ name: 'jQuery', phase: 'Unnga' });
   });
 
   it('should handle empty lines', () => {
@@ -46,7 +46,7 @@ describe('parseRadarData', () => {
     const result = parseRadarData(content);
 
     expect(result.observere).toHaveLength(2);
-    expect(result.prøve).toHaveLength(1);
+    expect(result.prove).toHaveLength(1);
   });
 
   it('should handle empty phases', () => {
@@ -57,14 +57,14 @@ describe('parseRadarData', () => {
 
 # Bruke
 
-# Avvikle`;
+# Unngå`;
 
     const result = parseRadarData(content);
 
     expect(result.observere).toHaveLength(0);
-    expect(result.prøve).toHaveLength(1);
+    expect(result.prove).toHaveLength(1);
     expect(result.bruke).toHaveLength(0);
-    expect(result.avvikle).toHaveLength(0);
+    expect(result.unnga).toHaveLength(0);
   });
 
   it('should trim whitespace from item names', () => {
@@ -82,9 +82,9 @@ describe('parseRadarData', () => {
     const result = parseRadarData('');
 
     expect(result.observere).toHaveLength(0);
-    expect(result.prøve).toHaveLength(0);
+    expect(result.prove).toHaveLength(0);
     expect(result.bruke).toHaveLength(0);
-    expect(result.avvikle).toHaveLength(0);
+    expect(result.unnga).toHaveLength(0);
   });
 
   it('should ignore lines without phase context', () => {
@@ -105,14 +105,14 @@ describe('parseRadarData', () => {
 - Item2
 # Bruke
 - Item3
-# Avvikle
+# Unngå
 - Item4`;
 
     const result = parseRadarData(content);
 
     expect(result.observere).toHaveLength(1);
-    expect(result.prøve).toHaveLength(1);
+    expect(result.prove).toHaveLength(1);
     expect(result.bruke).toHaveLength(1);
-    expect(result.avvikle).toHaveLength(1);
+    expect(result.unnga).toHaveLength(1);
   });
 });

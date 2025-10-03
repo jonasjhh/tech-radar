@@ -1,4 +1,4 @@
-import { LABEL_CONFIG } from './config';
+import { LABEL_CONFIG } from '../constants/config';
 
 export interface BoundingBox {
   x: number;

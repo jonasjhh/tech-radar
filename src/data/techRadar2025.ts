@@ -1,0 +1,77 @@
+import { RadarConfig } from '../radarConfig';
+
+export const techRadar2025: RadarConfig = {
+  id: 'tech2025',
+  name: 'Tech Radar 2025',
+  data: `# Observere
+- Rust [Lang]
+- Zig [Lang]
+- Bun [Lang]
+- Deno 2.0 [Lang]
+- GraalVM [Plat]
+- WebAssembly [Plat]
+- Astro [FW]
+- HTMX [Lib]
+- Turso [DB]
+- Drizzle ORM [Lib]
+- Biome [Tool]
+- Rsbuild [Tool]
+
+# Prøve
+- Go [Lang]
+- Axum [FW]
+- Actix [FW]
+- FastAPI [FW]
+- Hono [FW]
+- SvelteKit [FW]
+- Qwik [FW]
+- tRPC [Lib]
+- Prisma [Lib]
+- Zod [Lib]
+- Vitest [Tool]
+- Playwright [Tool]
+- Turborepo [Tool]
+- Nx [Tool]
+- Vite [Tool]
+- esbuild [Tool]
+- Bun runtime [Plat]
+
+# Bruke
+- TypeScript [Lang]
+- Python 3.12+ [Lang]
+- Node.js 20+ [Lang]
+- Kotlin [Lang]
+- Java 21 [Lang]
+- Spring Boot [FW]
+- Next.js [FW]
+- React [Lib]
+- Tailwind CSS [Lib]
+- PostgreSQL [DB]
+- Redis [DB]
+- Docker [Tool]
+- Kubernetes [Plat]
+- GitHub Actions [Tool]
+- Terraform [Tool]
+- pnpm [Tool]
+- ESLint [Tool]
+- Prettier [Tool]
+- Jest [Tool]
+- OpenAPI [Proto]
+- REST [Proto]
+- GraphQL [Proto]
+
+# Unngå
+- Java 8 [Lang]
+- Java 11 [Lang]
+- Python 2 [Lang]
+- AngularJS [FW]
+- jQuery [Lib]
+- Webpack [Tool]
+- npm [Tool]
+- CoffeeScript [Lang]
+- Bower [Tool]
+- Gulp [Tool]
+- Grunt [Tool]
+- MySQL 5.x [DB]
+`
+};

@@ -1,14 +1,21 @@
-import { TechRadar, TechItem } from './techRadar';
-import { PHASE_CONFIGS, CANVAS_CONFIG, LABEL_CONFIG, TITLE_CONFIG, COLLISION_CONFIG } from './config';
-import { BoundingBox, drawRoundedRect, checkCollision, measureTextBox } from './canvasUtils';
+import { TechRadar, TechItem, Category } from '../models/TechRadar';
+import { PhaseConfig, CANVAS_CONFIG, LABEL_CONFIG, TITLE_CONFIG, COLLISION_CONFIG } from '../constants/config';
+import { BoundingBox, drawRoundedRect, checkCollision, measureTextBox } from '../utils/canvasUtils';
 
 export class RadarChart {
   private ctx: CanvasRenderingContext2D;
   private centerX: number;
   private centerY: number;
   private radius: number;
+  private visibleCategories: Set<Category>;
 
-  constructor(private canvas: HTMLCanvasElement, private radar: TechRadar) {
+  constructor(
+    private canvas: HTMLCanvasElement,
+    private radar: TechRadar,
+    private phaseConfigs: PhaseConfig[],
+    visibleCategories?: Set<Category>
+  ) {
+    this.visibleCategories = visibleCategories || new Set(['Lang', 'FW', 'Lib', 'Tool', 'Plat', 'DB', 'Proto', 'Format', 'Infra']);
     const ctx = canvas.getContext('2d');
     if (!ctx) throw new Error('Could not get canvas context');
     this.ctx = ctx;
@@ -28,19 +35,65 @@ export class RadarChart {
   }
 
   render(): void {
+    // Clear the canvas before redrawing
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
     this.drawQuadrants();
     this.drawItems();
     this.drawCenter();
+    this.setupPhaseTooltips();
+  }
+
+  private setupPhaseTooltips(): void {
+    const container = this.canvas.parentElement;
+    if (!container) return;
+
+    // Remove existing phase tooltips and hover areas
+    const existingAreas = container.querySelectorAll('.phase-canvas-hover-area');
+    existingAreas.forEach(area => area.remove());
+
+    // Get canvas position relative to container
+    const canvasRect = this.canvas.getBoundingClientRect();
+    const containerRect = container.getBoundingClientRect();
+    const canvasOffsetX = canvasRect.left - containerRect.left;
+    const canvasOffsetY = canvasRect.top - containerRect.top;
+
+    // Create invisible hover areas for each phase title
+    this.phaseConfigs.forEach(phase => {
+      const titleAngle = (phase.startAngle + phase.endAngle) / 2;
+      const titleRadius = this.radius * TITLE_CONFIG.radiusMultiplier;
+      const titleX = this.centerX + Math.cos(titleAngle) * titleRadius;
+      const titleY = this.centerY + Math.sin(titleAngle) * titleRadius;
+
+      // Create hover area
+      const hoverArea = document.createElement('div');
+      hoverArea.className = 'phase-canvas-hover-area';
+      hoverArea.style.position = 'absolute';
+      hoverArea.style.left = `${canvasOffsetX + titleX - 60}px`;
+      hoverArea.style.top = `${canvasOffsetY + titleY - 20}px`;
+      hoverArea.style.width = '120px';
+      hoverArea.style.height = '40px';
+      hoverArea.style.cursor = 'help';
+      hoverArea.dataset.phase = phase.key;
+
+      // Create tooltip
+      const tooltip = document.createElement('div');
+      tooltip.className = 'phase-canvas-tooltip';
+      tooltip.textContent = phase.description;
+
+      hoverArea.appendChild(tooltip);
+      container.appendChild(hoverArea);
+    });
   }
 
   private drawQuadrants(): void {
-    PHASE_CONFIGS.forEach(phase => {
+    this.phaseConfigs.forEach(phase => {
       this.drawQuadrant(phase);
       this.drawPhaseTitle(phase);
     });
   }
 
-  private drawQuadrant(phase: typeof PHASE_CONFIGS[0]): void {
+  private drawQuadrant(phase: PhaseConfig): void {
     // Draw gradient fill
     const gradient = this.ctx.createRadialGradient(
       this.centerX, this.centerY, 0,
@@ -65,7 +118,7 @@ export class RadarChart {
     this.ctx.shadowBlur = 0;
   }
 
-  private drawPhaseTitle(phase: typeof PHASE_CONFIGS[0]): void {
+  private drawPhaseTitle(phase: PhaseConfig): void {
     const titleAngle = (phase.startAngle + phase.endAngle) / 2;
     const titleRadius = this.radius * TITLE_CONFIG.radiusMultiplier;
     const titleX = this.centerX + Math.cos(titleAngle) * titleRadius;
@@ -81,14 +134,18 @@ export class RadarChart {
   private drawItems(): void {
     const placedItems: BoundingBox[] = [];
 
-    PHASE_CONFIGS.forEach(phase => {
+    this.phaseConfigs.forEach(phase => {
       const items = this.radar[phase.key];
-      items.forEach((item, index) => {
+      const visibleItems = items.filter(item =>
+        !item.category || this.visibleCategories.has(item.category)
+      );
+
+      visibleItems.forEach((item, index) => {
         const position = this.findNonOverlappingPosition(
           phase,
           item,
           index,
-          items.length,
+          visibleItems.length,
           placedItems
         );
         this.drawLabel(item.name, position.x, position.y, phase.color);
@@ -97,8 +154,13 @@ export class RadarChart {
     });
   }
 
+  updateVisibleCategories(visibleCategories: Set<Category>): void {
+    this.visibleCategories = visibleCategories;
+    this.render();
+  }
+
   private findNonOverlappingPosition(
-    phase: typeof PHASE_CONFIGS[0],
+    phase: PhaseConfig,
     item: TechItem,
     index: number,
     totalItems: number,
@@ -121,7 +183,7 @@ export class RadarChart {
   }
 
   private calculatePosition(
-    phase: typeof PHASE_CONFIGS[0],
+    phase: PhaseConfig,
     index: number,
     totalItems: number
   ): { x: number; y: number } {

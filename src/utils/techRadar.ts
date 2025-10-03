@@ -1,25 +1,11 @@
-export type Phase = 'Observere' | 'Prøve' | 'Bruke' | 'Avvikle';
-export type Category = 'Lang' | 'FW' | 'Lib' | 'Tool' | 'Plat' | 'DB' | 'Proto' | 'Format' | 'Infra';
-
-export interface TechItem {
-  name: string;
-  phase: Phase;
-  category?: Category;
-}
-
-export interface TechRadar {
-  observere: TechItem[];
-  prøve: TechItem[];
-  bruke: TechItem[];
-  avvikle: TechItem[];
-}
+import { Phase, Category, TechRadar, TechItem } from '../models/TechRadar';
 
 export function parseRadarData(content: string): TechRadar {
   const radar: TechRadar = {
     observere: [],
-    prøve: [],
+    prove: [],
     bruke: [],
-    avvikle: [],
+    unnga: [],
   };
 
   const lines = content.split('\n');
@@ -35,9 +21,9 @@ export function parseRadarData(content: string): TechRadar {
     if (trimmed.startsWith('#')) {
       const phaseText = trimmed.substring(1).trim();
       if (phaseText === 'Observere') currentPhase = 'Observere';
-      else if (phaseText === 'Prøve') currentPhase = 'Prøve';
+      else if (phaseText === 'Prøve') currentPhase = 'Prove';
       else if (phaseText === 'Bruke') currentPhase = 'Bruke';
-      else if (phaseText === 'Avvikle') currentPhase = 'Avvikle';
+      else if (phaseText === 'Unngå') currentPhase = 'Unnga';
       continue;
     }
 

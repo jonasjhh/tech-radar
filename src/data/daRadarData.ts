@@ -1,4 +1,11 @@
-export const radarData = `# Observere
+import { RadarConfig } from '../radarConfig';
+import { DA_THEME } from '../constants/colors';
+
+export const daRadar: RadarConfig = {
+  id: 'da',
+  name: 'DA Tech Radar',
+  theme: DA_THEME,
+  data: `# Observere
 - Deno 2.0 [Lang]
 - Go [Lang]
 - GraalVM [Plat]
@@ -66,7 +73,7 @@ export const radarData = `# Observere
 - Vault [Tool]
 - YAML [Format]
 
-# Avvikle
+# Unngå
 - Active MQ [Plat]
 - Angular [FW]
 - Apache Camel [FW]
@@ -80,4 +87,5 @@ export const radarData = `# Observere
 - SOAP [Proto]
 - Vue [FW]
 - XML over JSON [Format]
-`;
+`
+};

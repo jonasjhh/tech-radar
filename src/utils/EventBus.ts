@@ -1,17 +1,27 @@
 /**
  * EventBus - Centralized event system for decoupled component communication
  * Follows Observer pattern and Single Responsibility Principle
+ *
+ * Fully type-safe implementation using mapped types
  */
 
-export type EventCallback<T = any> = (data: T) => void;
+export type EventCallback<T = unknown> = (data: T) => void;
 
 export interface TechRadarEvents {
   'radar:changed': string; // radarId
   'category:filter:changed': Set<string>; // Set of visible category names
 }
 
+// Mapped type for type-safe listener storage
+type EventListenerMap = {
+  [K in keyof TechRadarEvents]: Set<EventCallback<TechRadarEvents[K]>>;
+};
+
 export class EventBus {
-  private listeners: Map<string, Set<EventCallback>> = new Map();
+  private listeners: EventListenerMap = {
+    'radar:changed': new Set(),
+    'category:filter:changed': new Set(),
+  };
 
   /**
    * Subscribe to an event
@@ -21,11 +31,7 @@ export class EventBus {
     event: K,
     callback: EventCallback<TechRadarEvents[K]>
   ): () => void {
-    if (!this.listeners.has(event)) {
-      this.listeners.set(event, new Set());
-    }
-
-    this.listeners.get(event)!.add(callback);
+    this.listeners[event].add(callback);
 
     // Return unsubscribe function
     return () => this.off(event, callback);
@@ -38,10 +44,7 @@ export class EventBus {
     event: K,
     callback: EventCallback<TechRadarEvents[K]>
   ): void {
-    const callbacks = this.listeners.get(event);
-    if (callbacks) {
-      callbacks.delete(callback);
-    }
+    this.listeners[event].delete(callback);
   }
 
   /**
@@ -51,16 +54,13 @@ export class EventBus {
     event: K,
     data: TechRadarEvents[K]
   ): void {
-    const callbacks = this.listeners.get(event);
-    if (callbacks) {
-      callbacks.forEach(callback => {
-        try {
-          callback(data);
-        } catch (error) {
-          console.error(`Error in event listener for "${event}":`, error);
-        }
-      });
-    }
+    this.listeners[event].forEach(callback => {
+      try {
+        callback(data);
+      } catch (error) {
+        console.error(`Error in event listener for "${event}":`, error);
+      }
+    });
   }
 
   /**
@@ -70,11 +70,11 @@ export class EventBus {
     event: K,
     callback: EventCallback<TechRadarEvents[K]>
   ): void {
-    const wrappedCallback = (data: TechRadarEvents[K]) => {
+    const wrappedCallback = (data: TechRadarEvents[K]): void => {
       callback(data);
-      this.off(event, wrappedCallback as EventCallback<TechRadarEvents[K]>);
+      this.off(event, wrappedCallback);
     };
-    this.on(event, wrappedCallback as EventCallback<TechRadarEvents[K]>);
+    this.on(event, wrappedCallback);
   }
 
   /**
@@ -82,9 +82,11 @@ export class EventBus {
    */
   clear(event?: keyof TechRadarEvents): void {
     if (event) {
-      this.listeners.delete(event);
+      this.listeners[event].clear();
     } else {
-      this.listeners.clear();
+      Object.keys(this.listeners).forEach(key => {
+        this.listeners[key as keyof TechRadarEvents].clear();
+      });
     }
   }
 
@@ -92,7 +94,7 @@ export class EventBus {
    * Get listener count for debugging
    */
   getListenerCount(event: keyof TechRadarEvents): number {
-    return this.listeners.get(event)?.size ?? 0;
+    return this.listeners[event].size;
   }
 }
 

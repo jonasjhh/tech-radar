@@ -34,7 +34,7 @@ export class UrlManager {
    */
   static clearHash(): void {
     if (window.location.hash) {
-      history.replaceState(null, '', window.location.pathname + window.location.search);
+      window.history.replaceState(null, '', window.location.pathname + window.location.search);
     }
   }
 
@@ -44,13 +44,13 @@ export class UrlManager {
    * @returns Cleanup function to remove the listener
    */
   static onHashChange(callback: (radarId: string | null) => void): () => void {
-    const handler = () => {
+    const handler = (): void => {
       callback(this.getCurrentRadarId());
     };
 
     window.addEventListener('hashchange', handler);
 
-    return () => {
+    return (): void => {
       window.removeEventListener('hashchange', handler);
     };
   }

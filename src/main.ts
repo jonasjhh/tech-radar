@@ -7,24 +7,39 @@ import { CategoryFilter, CategoryVisibility } from './components/CategoryFilter'
 import { TechRadar, Category } from './models/TechRadar';
 import { getPhaseConfigs } from './constants/config';
 import { eventBus } from './utils/EventBus';
+import { UrlManager } from './utils/urlManager';
 
 class TechRadarApp {
-  private currentRadarId: string = radarConfigs[0].id;
-  private currentConfig: RadarConfig = radarConfigs[0];
+  private currentRadarId: string;
+  private currentConfig: RadarConfig;
   private radar: TechRadar;
   private chart: RadarChart | null = null;
   private list: RadarList | null = null;
   private filter: CategoryFilter | null = null;
+  private selector: RadarSelector | null = null;
   private visibleCategories: Set<Category>;
 
   constructor() {
-    this.radar = parseRadarData(radarConfigs[0].data);
+    // Initialize with radar from URL hash or default to first radar
+    const urlRadarId = UrlManager.getCurrentRadarId();
+    const initialConfig = (urlRadarId && getRadarById(urlRadarId)) || radarConfigs[0];
+
+    this.currentRadarId = initialConfig.id;
+    this.currentConfig = initialConfig;
+    this.radar = parseRadarData(initialConfig.data);
     this.visibleCategories = new Set(['Lang', 'FW', 'Lib', 'Tool', 'Plat', 'DB', 'Proto', 'Format', 'Infra']);
+
     this.setupEventListeners();
+    this.setupUrlHandling();
   }
 
   init(): void {
     try {
+      // Set initial URL hash if not present
+      if (!UrlManager.hasHash()) {
+        UrlManager.setRadarId(this.currentRadarId);
+      }
+
       this.initializeSelector();
       this.initializeFilter();
       this.applyGradient();
@@ -39,11 +54,28 @@ class TechRadarApp {
     // Listen for radar changes
     eventBus.on('radar:changed', (radarId) => {
       this.switchRadar(radarId);
+      UrlManager.setRadarId(radarId); // Update URL when radar changes
     });
 
     // Listen for category filter changes
     eventBus.on('category:filter:changed', (visibleCategories) => {
       this.onFilterChange(visibleCategories);
+    });
+  }
+
+  private setupUrlHandling(): void {
+    // Listen for URL hash changes (back/forward navigation)
+    UrlManager.onHashChange((radarId) => {
+      if (radarId && radarId !== this.currentRadarId) {
+        const config = getRadarById(radarId);
+        if (config) {
+          this.switchRadar(radarId);
+          // Update selector to match URL
+          if (this.selector) {
+            this.selector.setSelectedRadar(radarId);
+          }
+        }
+      }
     });
   }
 
@@ -78,7 +110,9 @@ class TechRadarApp {
       throw new Error('Chart container element not found');
     }
 
-    new RadarSelector(chartContainer as HTMLElement, radarConfigs);
+    this.selector = new RadarSelector(chartContainer as HTMLElement, radarConfigs);
+    // Set initial selection based on current radar
+    this.selector.setSelectedRadar(this.currentRadarId);
   }
 
   private switchRadar(radarId: string): void {

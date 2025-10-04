@@ -1,36 +1,44 @@
 import { parseRadarData } from '../utils/techRadar';
 
 describe('parseRadarData', () => {
-  it('should parse basic tech radar data', () => {
+  it('should parse tech radar data with categories and maturity scores', () => {
     const content = `# Observere
-- Rust
-- Deno
+- Rust [Lang] (1)
+- Deno [Lang] (3)
 
 # Prøve
-- TypeScript
+- TypeScript [Lang] (2)
 
 # Bruke
-- JavaScript
-- React
+- JavaScript [Lang] (1)
+- React [Lib] (1)
 
 # Unngå
-- jQuery`;
+- jQuery [Lib] (1)`;
 
     const result = parseRadarData(content);
 
     expect(result.observere).toHaveLength(2);
-    expect(result.observere[0]).toEqual({ name: 'Rust', phase: 'Observere' });
-    expect(result.observere[1]).toEqual({ name: 'Deno', phase: 'Observere' });
+    expect(result.observere[0]).toMatchObject({
+      name: 'Rust',
+      phase: 'Observere',
+      category: 'Lang',
+      maturityScore: 1
+    });
+    expect(result.observere[1]).toMatchObject({
+      name: 'Deno',
+      phase: 'Observere',
+      category: 'Lang',
+      maturityScore: 3
+    });
 
     expect(result.prove).toHaveLength(1);
-    expect(result.prove[0]).toEqual({ name: 'TypeScript', phase: 'Prove' });
-
-    expect(result.bruke).toHaveLength(2);
-    expect(result.bruke[0]).toEqual({ name: 'JavaScript', phase: 'Bruke' });
-    expect(result.bruke[1]).toEqual({ name: 'React', phase: 'Bruke' });
-
-    expect(result.unnga).toHaveLength(1);
-    expect(result.unnga[0]).toEqual({ name: 'jQuery', phase: 'Unnga' });
+    expect(result.prove[0]).toMatchObject({
+      name: 'TypeScript',
+      phase: 'Prove',
+      category: 'Lang',
+      maturityScore: 2
+    });
   });
 
   it('should handle empty lines', () => {
@@ -100,13 +108,13 @@ describe('parseRadarData', () => {
 
   it('should handle all four Norwegian phases', () => {
     const content = `# Observere
-- Item1
+- Item1 [Tool] (1)
 # Prøve
-- Item2
+- Item2 [Tool] (2)
 # Bruke
-- Item3
+- Item3 [Tool] (1)
 # Unngå
-- Item4`;
+- Item4 [Tool] (1)`;
 
     const result = parseRadarData(content);
 
@@ -114,5 +122,48 @@ describe('parseRadarData', () => {
     expect(result.prove).toHaveLength(1);
     expect(result.bruke).toHaveLength(1);
     expect(result.unnga).toHaveLength(1);
+  });
+
+  it('should parse descriptions correctly', () => {
+    const content = `# Observere
+- Rust [Lang] (1) - Systems programming language with memory safety
+- CRI-O [Tool] (4) - Container runtime for Kubernetes
+
+# Bruke
+- Node.js [Lang] (1) - JavaScript runtime for server-side applications`;
+
+    const result = parseRadarData(content);
+
+    expect(result.observere[0]).toMatchObject({
+      name: 'Rust',
+      category: 'Lang',
+      maturityScore: 1,
+      description: 'Systems programming language with memory safety'
+    });
+
+    expect(result.observere[1]).toMatchObject({
+      name: 'CRI-O',
+      category: 'Tool',
+      maturityScore: 4,
+      description: 'Container runtime for Kubernetes'
+    });
+
+    expect(result.bruke[0]).toMatchObject({
+      name: 'Node.js',
+      category: 'Lang',
+      maturityScore: 1,
+      description: 'JavaScript runtime for server-side applications'
+    });
+  });
+
+  it('should handle technologies with hyphens in names', () => {
+    const content = `# Observere
+- CRI-O [Tool] (4) - Container runtime
+- Node.js [Lang] (1) - JavaScript runtime`;
+
+    const result = parseRadarData(content);
+
+    expect(result.observere[0].name).toBe('CRI-O');
+    expect(result.observere[1].name).toBe('Node.js');
   });
 });

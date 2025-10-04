@@ -1,6 +1,8 @@
 import { TechRadar, TechItem, Category } from '../models/TechRadar';
 import { PhaseConfig, CANVAS_CONFIG, LABEL_CONFIG, TITLE_CONFIG, COLLISION_CONFIG } from '../constants/config';
 import { BoundingBox, drawRoundedRect, checkCollision, measureTextBox } from '../utils/canvasUtils';
+import { TooltipManager } from './TooltipManager';
+import { getRelativePosition, centerToTopLeft } from '../utils/domUtils';
 
 export class RadarChart {
   private ctx: CanvasRenderingContext2D;
@@ -8,6 +10,8 @@ export class RadarChart {
   private centerY: number;
   private radius: number;
   private visibleCategories: Set<Category>;
+  private phaseTooltipManager: TooltipManager | null = null;
+  private techTooltipManager: TooltipManager | null = null;
 
   constructor(
     private canvas: HTMLCanvasElement,
@@ -24,6 +28,15 @@ export class RadarChart {
     this.centerX = this.canvas.width / 2;
     this.centerY = this.canvas.height / 2;
     this.radius = this.canvas.width * CANVAS_CONFIG.radiusMultiplier;
+    this.initializeTooltipManagers();
+  }
+
+  private initializeTooltipManagers(): void {
+    const container = this.canvas.parentElement;
+    if (container) {
+      this.phaseTooltipManager = new TooltipManager(container, 'phase-canvas-tooltip', 'phase-canvas-hover-area');
+      this.techTooltipManager = new TooltipManager(container, 'tech-canvas-tooltip', 'tech-canvas-hover-area');
+    }
   }
 
   private setupCanvas(): void {
@@ -46,44 +59,26 @@ export class RadarChart {
   }
 
   private setupPhaseTooltips(): void {
-    const container = this.canvas.parentElement;
-    if (!container) return;
+    if (!this.phaseTooltipManager) return;
 
-    // Remove existing phase tooltips and hover areas
-    const existingAreas = container.querySelectorAll('.phase-canvas-hover-area');
-    existingAreas.forEach(area => area.remove());
+    this.phaseTooltipManager.clearTooltips();
 
-    // Get canvas position relative to container
-    const canvasRect = this.canvas.getBoundingClientRect();
-    const containerRect = container.getBoundingClientRect();
-    const canvasOffsetX = canvasRect.left - containerRect.left;
-    const canvasOffsetY = canvasRect.top - containerRect.top;
+    const canvasOffset = getRelativePosition(this.canvas, this.canvas.parentElement!);
 
-    // Create invisible hover areas for each phase title
     this.phaseConfigs.forEach(phase => {
       const titleAngle = (phase.startAngle + phase.endAngle) / 2;
       const titleRadius = this.radius * TITLE_CONFIG.radiusMultiplier;
       const titleX = this.centerX + Math.cos(titleAngle) * titleRadius;
       const titleY = this.centerY + Math.sin(titleAngle) * titleRadius;
 
-      // Create hover area
-      const hoverArea = document.createElement('div');
-      hoverArea.className = 'phase-canvas-hover-area';
-      hoverArea.style.position = 'absolute';
-      hoverArea.style.left = `${canvasOffsetX + titleX - 60}px`;
-      hoverArea.style.top = `${canvasOffsetY + titleY - 20}px`;
-      hoverArea.style.width = '120px';
-      hoverArea.style.height = '40px';
-      hoverArea.style.cursor = 'help';
-      hoverArea.dataset.phase = phase.key;
-
-      // Create tooltip
-      const tooltip = document.createElement('div');
-      tooltip.className = 'phase-canvas-tooltip';
-      tooltip.textContent = phase.description;
-
-      hoverArea.appendChild(tooltip);
-      container.appendChild(hoverArea);
+      this.phaseTooltipManager!.createTooltip({
+        x: canvasOffset.x + titleX - 60,
+        y: canvasOffset.y + titleY - 20,
+        width: 120,
+        height: 40,
+        content: phase.description,
+        dataAttribute: { key: 'phase', value: phase.key }
+      });
     });
   }
 
@@ -172,11 +167,8 @@ export class RadarChart {
   private drawItems(): void {
     const placedItems: BoundingBox[] = [];
 
-    // Remove existing tech tooltips and hover areas
-    const container = this.canvas.parentElement;
-    if (container) {
-      const existingTechAreas = container.querySelectorAll('.tech-canvas-hover-area');
-      existingTechAreas.forEach(area => area.remove());
+    if (this.techTooltipManager) {
+      this.techTooltipManager.clearTooltips();
     }
 
     this.phaseConfigs.forEach(phase => {
@@ -194,8 +186,8 @@ export class RadarChart {
           placedItems
         );
         this.drawLabel(item.name, position.x, position.y, phase.color);
-        if (item.description) {
-          this.createLabelTooltip(item.name, item.description, position.x, position.y, position.boundingBox);
+        if (item.description && this.techTooltipManager) {
+          this.createLabelTooltip(item.name, item.description, position.boundingBox);
         }
         placedItems.push(position.boundingBox);
       });
@@ -293,38 +285,20 @@ export class RadarChart {
     this.ctx.fillText(text, x, y);
   }
 
-  private createLabelTooltip(name: string, description: string, x: number, y: number, boundingBox: BoundingBox): void {
-    const container = this.canvas.parentElement;
-    if (!container) return;
+  private createLabelTooltip(name: string, description: string, boundingBox: BoundingBox): void {
+    if (!this.techTooltipManager || !this.canvas.parentElement) return;
 
-    // Get canvas position relative to container
-    const canvasRect = this.canvas.getBoundingClientRect();
-    const containerRect = container.getBoundingClientRect();
-    const canvasOffsetX = canvasRect.left - containerRect.left;
-    const canvasOffsetY = canvasRect.top - containerRect.top;
+    const canvasOffset = getRelativePosition(this.canvas, this.canvas.parentElement);
+    const topLeft = centerToTopLeft(boundingBox.x, boundingBox.y, boundingBox.width, boundingBox.height);
 
-    // Convert center-based bounding box to top-left coordinates
-    const boxX = boundingBox.x - boundingBox.width / 2;
-    const boxY = boundingBox.y - boundingBox.height / 2;
-
-    // Create hover area matching the label's bounding box
-    const hoverArea = document.createElement('div');
-    hoverArea.className = 'tech-canvas-hover-area';
-    hoverArea.style.position = 'absolute';
-    hoverArea.style.left = `${canvasOffsetX + boxX}px`;
-    hoverArea.style.top = `${canvasOffsetY + boxY}px`;
-    hoverArea.style.width = `${boundingBox.width}px`;
-    hoverArea.style.height = `${boundingBox.height}px`;
-    hoverArea.style.cursor = 'help';
-    hoverArea.dataset.tech = name;
-
-    // Create tooltip
-    const tooltip = document.createElement('div');
-    tooltip.className = 'tech-canvas-tooltip';
-    tooltip.textContent = description;
-
-    hoverArea.appendChild(tooltip);
-    container.appendChild(hoverArea);
+    this.techTooltipManager.createTooltip({
+      x: canvasOffset.x + topLeft.x,
+      y: canvasOffset.y + topLeft.y,
+      width: boundingBox.width,
+      height: boundingBox.height,
+      content: description,
+      dataAttribute: { key: 'tech', value: name }
+    });
   }
 
   private drawCenter(): void {

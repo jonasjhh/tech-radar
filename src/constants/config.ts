@@ -47,9 +47,6 @@ export function getPhaseConfigs(phaseColors?: RadarTheme['phaseColors']): PhaseC
   ];
 }
 
-// Export default configs for backward compatibility
-export const PHASE_CONFIGS = getPhaseConfigs();
-
 export const CANVAS_CONFIG = {
   maxWidth: 1400,
   sizeMultiplier: 0.8,

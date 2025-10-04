@@ -6,6 +6,7 @@ import { RadarSelector } from './components/RadarSelector';
 import { CategoryFilter, CategoryVisibility } from './components/CategoryFilter';
 import { TechRadar, Category } from './models/TechRadar';
 import { getPhaseConfigs } from './constants/config';
+import { eventBus } from './utils/EventBus';
 
 class TechRadarApp {
   private currentRadarId: string = radarConfigs[0].id;
@@ -19,6 +20,7 @@ class TechRadarApp {
   constructor() {
     this.radar = parseRadarData(radarConfigs[0].data);
     this.visibleCategories = new Set(['Lang', 'FW', 'Lib', 'Tool', 'Plat', 'DB', 'Proto', 'Format', 'Infra']);
+    this.setupEventListeners();
   }
 
   init(): void {
@@ -33,16 +35,25 @@ class TechRadarApp {
     }
   }
 
+  private setupEventListeners(): void {
+    // Listen for radar changes
+    eventBus.on('radar:changed', (radarId) => {
+      this.switchRadar(radarId);
+    });
+
+    // Listen for category filter changes
+    eventBus.on('category:filter:changed', (visibleCategories) => {
+      this.onFilterChange(visibleCategories);
+    });
+  }
+
   private initializeFilter(): void {
     const chartContainer = document.querySelector('.chart-container');
     if (!chartContainer) {
       throw new Error('Chart container element not found');
     }
 
-    this.filter = new CategoryFilter(
-      chartContainer as HTMLElement,
-      (visible) => this.onFilterChange(visible)
-    );
+    this.filter = new CategoryFilter(chartContainer as HTMLElement);
     this.filter.render();
   }
 
@@ -67,11 +78,7 @@ class TechRadarApp {
       throw new Error('Chart container element not found');
     }
 
-    new RadarSelector(
-      chartContainer as HTMLElement,
-      radarConfigs,
-      (radarId) => this.switchRadar(radarId)
-    );
+    new RadarSelector(chartContainer as HTMLElement, radarConfigs);
   }
 
   private switchRadar(radarId: string): void {

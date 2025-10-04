@@ -1,12 +1,12 @@
-import { RadarConfig } from '../data';
+import { RadarConfig } from '../radarConfig';
+import { eventBus } from '../utils/EventBus';
 
 export class RadarSelector {
   private selectElement: HTMLSelectElement;
 
   constructor(
     private container: HTMLElement,
-    private configs: RadarConfig[],
-    private onRadarChange: (radarId: string) => void
+    private configs: RadarConfig[]
   ) {
     this.selectElement = this.createSelector();
     this.render();
@@ -26,7 +26,7 @@ export class RadarSelector {
 
     select.addEventListener('change', (e) => {
       const target = e.target as HTMLSelectElement;
-      this.onRadarChange(target.value);
+      eventBus.emit('radar:changed', target.value);
     });
 
     return select;

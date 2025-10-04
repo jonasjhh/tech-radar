@@ -1,11 +1,11 @@
 import { Category } from '../models/TechRadar';
+import { eventBus } from '../utils/EventBus';
 
 export type CategoryVisibility = Set<Category>;
 
 export class CategoryFilter {
   private container: HTMLElement;
   private visibleCategories: CategoryVisibility;
-  private onChange: (visible: CategoryVisibility) => void;
   private filterElement: HTMLDivElement | null = null;
 
   private readonly categories: Category[] = ['Lang', 'FW', 'Lib', 'Tool', 'Plat', 'DB', 'Proto', 'Format', 'Infra'];
@@ -22,10 +22,9 @@ export class CategoryFilter {
     'Infra': 'Infrastructure'
   };
 
-  constructor(container: HTMLElement, onChange: (visible: CategoryVisibility) => void) {
+  constructor(container: HTMLElement) {
     this.container = container;
     this.visibleCategories = new Set(this.categories);
-    this.onChange = onChange;
   }
 
   render(): void {
@@ -61,7 +60,7 @@ export class CategoryFilter {
         });
       }
 
-      this.onChange(this.visibleCategories);
+      eventBus.emit('category:filter:changed', this.visibleCategories);
     });
 
     this.filterElement.appendChild(allButton);
@@ -89,7 +88,7 @@ export class CategoryFilter {
           allBtn.dataset.visible = this.visibleCategories.size === this.categories.length ? 'true' : 'false';
         }
 
-        this.onChange(this.visibleCategories);
+        eventBus.emit('category:filter:changed', this.visibleCategories);
       });
 
       this.filterElement!.appendChild(button);

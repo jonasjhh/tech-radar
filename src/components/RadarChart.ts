@@ -39,6 +39,7 @@ export class RadarChart {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
     this.drawQuadrants();
+    this.drawRadialRings();
     this.drawItems();
     this.drawCenter();
     this.setupPhaseTooltips();
@@ -93,6 +94,23 @@ export class RadarChart {
     });
   }
 
+  private drawRadialRings(): void {
+    // Draw 5 concentric rings with equal areas
+    // Area of circle = π * r²
+    // For equal areas, radius should be proportional to sqrt(n)
+    const numRings = 5;
+    this.ctx.strokeStyle = 'rgba(53, 71, 84, 0.15)'; // Semi-transparent dark blue-gray
+    this.ctx.lineWidth = 1;
+
+    for (let i = 1; i <= numRings; i++) {
+      // Use sqrt to ensure equal areas between rings
+      const ringRadius = this.radius * Math.sqrt(i / numRings);
+      this.ctx.beginPath();
+      this.ctx.arc(this.centerX, this.centerY, ringRadius, 0, 2 * Math.PI);
+      this.ctx.stroke();
+    }
+  }
+
   private drawQuadrant(phase: PhaseConfig): void {
     // Draw gradient fill
     const gradient = this.ctx.createRadialGradient(
@@ -124,15 +142,42 @@ export class RadarChart {
     const titleX = this.centerX + Math.cos(titleAngle) * titleRadius;
     const titleY = this.centerY + Math.sin(titleAngle) * titleRadius;
 
-    this.ctx.fillStyle = phase.color;
+    // Measure text to create background box
     this.ctx.font = TITLE_CONFIG.font;
+    const text = phase.title.toUpperCase();
+    const textMetrics = this.ctx.measureText(text);
+    const textWidth = textMetrics.width;
+    const textHeight = 16; // Approximate font height
+
+    // Add padding
+    const padding = 8;
+    const boxWidth = textWidth + padding * 2;
+    const boxHeight = textHeight + padding * 2;
+    const boxX = titleX - boxWidth / 2;
+    const boxY = titleY - boxHeight / 2;
+
+    // Draw rounded rectangle background with phase color
+    const borderRadius = 4;
+    drawRoundedRect(this.ctx, boxX, boxY, boxWidth, boxHeight, borderRadius);
+    this.ctx.fillStyle = phase.color;
+    this.ctx.fill();
+
+    // Draw white text
+    this.ctx.fillStyle = '#FFFFFF';
     this.ctx.textAlign = 'center';
     this.ctx.textBaseline = 'middle';
-    this.ctx.fillText(phase.title.toUpperCase(), titleX, titleY);
+    this.ctx.fillText(text, titleX, titleY);
   }
 
   private drawItems(): void {
     const placedItems: BoundingBox[] = [];
+
+    // Remove existing tech tooltips and hover areas
+    const container = this.canvas.parentElement;
+    if (container) {
+      const existingTechAreas = container.querySelectorAll('.tech-canvas-hover-area');
+      existingTechAreas.forEach(area => area.remove());
+    }
 
     this.phaseConfigs.forEach(phase => {
       const items = this.radar[phase.key];
@@ -149,6 +194,9 @@ export class RadarChart {
           placedItems
         );
         this.drawLabel(item.name, position.x, position.y, phase.color);
+        if (item.description) {
+          this.createLabelTooltip(item.name, item.description, position.x, position.y, position.boundingBox);
+        }
         placedItems.push(position.boundingBox);
       });
     });
@@ -169,7 +217,7 @@ export class RadarChart {
     const { width, height } = measureTextBox(this.ctx, item.name);
 
     for (let attempt = 0; attempt < COLLISION_CONFIG.maxAttempts; attempt++) {
-      const { x, y } = this.calculatePosition(phase, index, totalItems);
+      const { x, y } = this.calculatePosition(phase, index, totalItems, item);
       const boundingBox: BoundingBox = { x, y, width, height };
 
       if (!placedItems.some(placed => checkCollision(boundingBox, placed))) {
@@ -178,14 +226,15 @@ export class RadarChart {
     }
 
     // Fallback: return last calculated position even if overlapping
-    const { x, y } = this.calculatePosition(phase, index, totalItems);
+    const { x, y } = this.calculatePosition(phase, index, totalItems, item);
     return { x, y, boundingBox: { x, y, width, height } };
   }
 
   private calculatePosition(
     phase: PhaseConfig,
     index: number,
-    totalItems: number
+    totalItems: number,
+    item?: TechItem
   ): { x: number; y: number } {
     const angleSpread = (phase.endAngle - phase.startAngle) * CANVAS_CONFIG.angleSpreadMultiplier;
     const angleOffset = (phase.endAngle - phase.startAngle) * CANVAS_CONFIG.angleOffsetMultiplier;
@@ -193,9 +242,19 @@ export class RadarChart {
     const itemAngle = phase.startAngle + angleOffset +
       (angleSpread * (index + 1) / (totalItems + 1)) + randomAngle;
 
-    const radiusSpread = this.radius * CANVAS_CONFIG.radiusSpreadMultiplier;
-    const radiusOffset = this.radius * CANVAS_CONFIG.radiusOffsetMultiplier;
-    const itemRadius = radiusOffset + (radiusSpread * Math.random());
+    // Use maturityScore (1-5) to determine radius with equal-area distribution
+    // maturityScore 1 = closest to center (most mature), maturityScore 5 = furthest from center (least mature)
+    // Position items in the middle of their respective ring area using sqrt for equal areas
+    const score = item.maturityScore;
+    const minRadiusFactor = Math.sqrt((score - 1) / 5); // Inner boundary of ring
+    const maxRadiusFactor = Math.sqrt(score / 5); // Outer boundary of ring
+
+    // Add more variation for inner rings to spread out labels
+    // Inner rings get more radial noise to utilize the full ring width
+    const ringWidth = maxRadiusFactor - minRadiusFactor;
+    const radiusWithinRing = minRadiusFactor + Math.random() * ringWidth; // Random position within ring
+
+    const itemRadius = this.radius * radiusWithinRing;
 
     return {
       x: this.centerX + Math.cos(itemAngle) * itemRadius,
@@ -232,6 +291,40 @@ export class RadarChart {
     this.ctx.textAlign = 'center';
     this.ctx.textBaseline = 'middle';
     this.ctx.fillText(text, x, y);
+  }
+
+  private createLabelTooltip(name: string, description: string, x: number, y: number, boundingBox: BoundingBox): void {
+    const container = this.canvas.parentElement;
+    if (!container) return;
+
+    // Get canvas position relative to container
+    const canvasRect = this.canvas.getBoundingClientRect();
+    const containerRect = container.getBoundingClientRect();
+    const canvasOffsetX = canvasRect.left - containerRect.left;
+    const canvasOffsetY = canvasRect.top - containerRect.top;
+
+    // Convert center-based bounding box to top-left coordinates
+    const boxX = boundingBox.x - boundingBox.width / 2;
+    const boxY = boundingBox.y - boundingBox.height / 2;
+
+    // Create hover area matching the label's bounding box
+    const hoverArea = document.createElement('div');
+    hoverArea.className = 'tech-canvas-hover-area';
+    hoverArea.style.position = 'absolute';
+    hoverArea.style.left = `${canvasOffsetX + boxX}px`;
+    hoverArea.style.top = `${canvasOffsetY + boxY}px`;
+    hoverArea.style.width = `${boundingBox.width}px`;
+    hoverArea.style.height = `${boundingBox.height}px`;
+    hoverArea.style.cursor = 'help';
+    hoverArea.dataset.tech = name;
+
+    // Create tooltip
+    const tooltip = document.createElement('div');
+    tooltip.className = 'tech-canvas-tooltip';
+    tooltip.textContent = description;
+
+    hoverArea.appendChild(tooltip);
+    container.appendChild(hoverArea);
   }
 
   private drawCenter(): void {

@@ -31,19 +31,27 @@ export function parseRadarData(content: string): TechRadar {
     if (currentPhase && trimmed.startsWith('-')) {
       const content = trimmed.substring(1).trim();
       if (content) {
-        // Parse format: "- Name [Category]" or just "- Name"
-        const match = content.match(/^(.+?)\s*\[([^\]]+)\]$/);
+        // Parse format: "Name [Category] (maturityScore) - Description"
+        // Match name (non-greedy up to [), then optional [Category], then optional (score), then optional - description
+        const fullMatch = content.match(/^(.+?)\s*\[([^\]]+)\]\s*\((\d+)\)\s*(?:-\s*(.+))?$/);
         let name: string;
         let category: Category | undefined;
+        let maturityScore: number | undefined;
+        let description: string | undefined;
 
-        if (match) {
-          name = match[1].trim();
-          category = match[2].trim() as Category;
+        if (fullMatch) {
+          name = fullMatch[1].trim();
+          category = fullMatch[2].trim() as Category;
+          maturityScore = parseInt(fullMatch[3], 10);
+          if (fullMatch[4]) {
+            description = fullMatch[4].trim();
+          }
         } else {
+          // Fallback for entries without proper format
           name = content;
         }
 
-        const item: TechItem = { name, phase: currentPhase, category };
+        const item: TechItem = { name, phase: currentPhase, category, maturityScore: maturityScore!, description };
         const phaseKey = currentPhase.toLowerCase() as keyof TechRadar;
         radar[phaseKey].push(item);
       }

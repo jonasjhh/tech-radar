@@ -73,6 +73,14 @@ export class RadarList {
         listItem.appendChild(categorySpan);
       }
 
+      // Add custom tooltip if description exists
+      if (item.description) {
+        const tooltip = document.createElement('div');
+        tooltip.className = 'tech-item-tooltip';
+        tooltip.textContent = item.description;
+        listItem.appendChild(tooltip);
+      }
+
       list.appendChild(listItem);
     });
 

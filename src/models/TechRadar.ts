@@ -5,6 +5,8 @@ export interface TechItem {
   name: string;
   phase: Phase;
   category?: Category;
+  maturityScore: number; // 1-5: distance from center (1 = most mature, 5 = least mature)
+  description?: string; // Optional explanation of what it is and/or maturity reasoning
 }
 
 export interface TechRadar {

@@ -4,114 +4,151 @@ export const techRadar2025: RadarConfig = {
   id: 'tech2025',
   name: 'Tech Radar 2025',
   data: `# Observere
-- Biome [Tool]
-- Bun [Lang]
-- Bun runtime [Plat]
-- Carbon [Lang]
-- Colima [Tool]
-- CRI-O [Tool]
-- Drizzle ORM [Lib]
-- Hono [FW]
-- Java 25 [Lang]
-- Julia [Lang]
-- Lima [Tool]
-- LXD [Tool]
-- Nerdctl [Tool]
-- Qwik [FW]
-- Rancher Desktop [Tool]
-- Rsbuild [Tool]
-- tRPC [Lib]
-- Turso [DB]
-- WebAssembly [Lang]
-- Zig [Lang]
+- Biome [Tool] (2) - Fast formatter and linter for JavaScript, TypeScript, and JSON
+- Bun [Lang] (2) - All-in-one JavaScript runtime with bundler, transpiler, and package manager
+- Bun runtime [Plat] (3) - Fast JavaScript runtime alternative to Node.js and Deno
+- Carbon [Lang] (5) - Experimental successor to C++ focusing on performance and safety
+- Colima [Tool] (2) - Lightweight container runtime for macOS with minimal setup
+- CRI-O [Tool] (4) - Lightweight container runtime for Kubernetes implementing CRI
+- Drizzle ORM [Lib] (2) - TypeScript ORM with SQL-like syntax and type safety
+- Hono [FW] (3) - Ultrafast web framework for edge computing and serverless
+- Java 25 [Lang] (5) - Latest Java release with preview features and ongoing improvements
+- Julia [Lang] (4) - High-performance language for technical computing and data science
+- Lima [Tool] (3) - Linux virtual machine tool for macOS with containerd integration
+- LXD [Tool] (3) - System container and virtual machine manager built on LXC
+- Nerdctl [Tool] (3) - Docker-compatible CLI for containerd with advanced features
+- Qwik [FW] (2) - Resumable framework for instant-loading web applications
+- Rancher Desktop [Tool] (1) - Kubernetes and container management desktop application
+- Rsbuild [Tool] (2) - High-performance build tool based on Rspack
+- tRPC [Lib] (1) - End-to-end typesafe APIs without code generation or runtime bloat
+- Turso [DB] (3) - Edge-hosted distributed SQLite database with low latency
+- WebAssembly [Lang] (3) - Binary instruction format for stack-based VM, enables near-native performance in browsers
+- Zig [Lang] (4) - Low-level systems language focusing on simplicity and compile-time code execution
 
 # Prøve
-- Actix [FW]
-- Axum [FW]
-- containerd [Tool]
-- Dart [Lang]
-- Deno 2.0 [Lang]
-- esbuild [Tool]
-- FastAPI [FW]
-- Go [Lang]
-- GraalVM [Plat]
-- HTMX [Lib]
-- Nx [Tool]
-- Podman [Tool]
-- Prisma [Lib]
-- Rust [Lang]
-- SvelteKit [FW]
-- Turborepo [Tool]
-- Vite [Tool]
-- Vitest [Tool]
-- Zod [Lib]
+- Actix [FW] (3) - High-performance actor framework and web framework for Rust
+- ArgoCD [Tool] (2) - GitOps continuous delivery tool for Kubernetes with declarative setup
+- Axum [FW] (3) - Ergonomic and modular web framework built on Tokio for Rust
+- Backstage [Plat] (3) - Open platform for building developer portals and unifying infrastructure tooling
+- containerd [Tool] (1) - Industry-standard container runtime with focus on simplicity and robustness
+- Crossplane [Infra] (3) - Kubernetes-native infrastructure management using custom resource definitions
+- Dart [Lang] (2) - Client-optimized language for fast apps on any platform, powers Flutter
+- Deno 2.0 [Lang] (1) - Major update to Deno runtime with improved Node.js compatibility and performance
+- esbuild [Tool] (1) - Extremely fast JavaScript bundler and minifier written in Go
+- FastAPI [FW] (2) - Modern Python web framework for building APIs with automatic documentation
+- Go [Lang] (1) - Statically typed compiled language designed for simplicity, reliability, and efficiency
+- GraalVM [Plat] (3) - High-performance polyglot VM supporting multiple languages with ahead-of-time compilation
+- Grafana [Tool] (1) - Multi-platform analytics and interactive visualization web application
+- Helm [Tool] (1) - Package manager for Kubernetes applications using templated manifests
+- HTMX [Lib] (1) - Library for accessing modern browser features with HTML attributes
+- Jaeger [Tool] (2) - Distributed tracing system for monitoring and troubleshooting microservices
+- Nx [Tool] (2) - Smart monorepo build system with advanced caching and task orchestration
+- OpenTelemetry [Lib] (2) - Vendor-neutral observability framework for traces, metrics, and logs
+- Pact [Tool] (2) - Contract testing framework for microservices and APIs
+- Podman [Tool] (2) - Daemonless container engine for developing and managing containers
+- Prisma [Lib] (1) - Next-generation ORM with type safety and auto-generated queries
+- Rust [Lang] (1) - Systems programming language with memory safety without garbage collection
+- SvelteKit [FW] (2) - Full-stack framework for building web applications with Svelte
+- Turborepo [Tool] (2) - High-performance build system for JavaScript and TypeScript monorepos
+- Vite [Tool] (1) - Next-generation frontend tooling with lightning-fast HMR
+- Vitest [Tool] (1) - Blazing fast unit test framework powered by Vite
+- Zod [Lib] (1) - TypeScript-first schema validation with static type inference
 
 # Bruke
-- C# [Lang]
-- Clojure [Lang]
-- Cypress [Tool]
-- Docker [Tool]
-- Elasticsearch [DB]
-- ESLint [Tool]
-- Express [FW]
-- F# [Lang]
-- GitHub Actions [Tool]
-- Gradle [Tool]
-- GraphQL [Proto]
-- gRPC [Proto]
-- H2 [DB]
-- Java 21 [Lang]
-- JavaScript [Lang]
-- Jest [Tool]
-- Kotlin [Lang]
-- Kubernetes [Plat]
-- Maven [Tool]
-- mise [Tool]
-- MongoDB [DB]
-- Next.js [FW]
-- Node.js 20+ [Lang]
-- npm [Tool]
-- OpenAPI [Proto]
-- OpenSearch [DB]
-- Playwright [Tool]
-- pnpm [Tool]
-- PostgreSQL [DB]
-- Prettier [Tool]
-- Prometheus [Tool]
-- Python 3 [Lang]
-- React [Lib]
-- Redis [DB]
-- REST [Proto]
-- Scala [Lang]
-- SQL [Lang]
-- SQLite [DB]
-- Spring Boot [FW]
-- Swift [Lang]
-- Tailwind CSS [Lib]
-- Terraform [Tool]
-- TypeScript [Lang]
-- Yarn [Tool]
+- C# [Lang] (1) - Modern object-oriented language for .NET platform with strong typing
+- Clojure [Lang] (3) - Dynamic functional language for JVM emphasizing immutability
+- Cypress [Tool] (2) - End-to-end testing framework with real-time browser testing
+- DAST [Tool] (2) - Dynamic Application Security Testing for runtime security analysis
+- Deno [Lang] (3) - Secure JavaScript and TypeScript runtime built on V8 with native TypeScript support
+- Dependabot [Tool] (1) - Automated dependency updates and security vulnerability alerts
+- Dependency Management [Tool] (1) - Practices and tools for managing external libraries and versions
+- Docker [Tool] (1) - Platform for developing, shipping, and running applications in containers
+- Elasticsearch [DB] (2) - Distributed search and analytics engine built on Apache Lucene
+- ESLint [Tool] (1) - Pluggable linting utility for JavaScript and TypeScript
+- Express [FW] (2) - Minimal and flexible Node.js web application framework
+- F# [Lang] (2) - Functional-first language for .NET with type inference
+- Flyway [Tool] (2) - Database migration tool with version control for schema changes
+- Git [Tool] (1) - Distributed version control system for tracking changes in source code
+- GitHub Actions [Tool] (1) - CI/CD platform integrated with GitHub for automating workflows
+- Gradle [Tool] (1) - Build automation tool for multi-language software development
+- GraphQL [Proto] (2) - Query language for APIs with flexible data fetching
+- gRPC [Proto] (2) - High-performance RPC framework using Protocol Buffers
+- H2 [DB] (3) - Lightweight Java SQL database with in-memory and embedded modes
+- Istio [Infra] (2) - Service mesh providing traffic management, security, and observability
+- Java 21 [Lang] (1) - Long-term support release with virtual threads and pattern matching
+- JavaScript [Lang] (1) - Dynamic programming language essential for web development
+- Jest [Tool] (1) - JavaScript testing framework with focus on simplicity
+- JSON [Format] (1) - Lightweight data interchange format that is easy to read and write
+- JUnit [Tool] (1) - Unit testing framework for Java applications
+- Kafka [Plat] (1) - Distributed event streaming platform for high-throughput data pipelines
+- Keycloak [Plat] (2) - Open source identity and access management solution
+- Kibana [Tool] (1) - Data visualization and exploration tool for Elasticsearch
+- Kotlin [Lang] (1) - Modern statically typed language for JVM, Android, and multiplatform development
+- Ktor [FW] (2) - Asynchronous framework for creating web applications in Kotlin
+- Kubernetes [Plat] (1) - Container orchestration platform for automating deployment and scaling
+- Logstash [Tool] (2) - Server-side data processing pipeline for ingesting and transforming data
+- Maven [Tool] (1) - Build automation and dependency management tool for Java projects
+- mise [Tool] (3) - Polyglot runtime manager and task runner for development environments
+- MongoDB [DB] (2) - Document-oriented NoSQL database with flexible schema
+- Next.js [FW] (1) - React framework with server-side rendering and static site generation
+- Nginx [Tool] (1) - High-performance web server and reverse proxy
+- Node.js [Lang] (1) - JavaScript runtime built on Chrome's V8 engine for server-side applications
+- npm [Tool] (2) - Default package manager for Node.js ecosystem
+- OAuth2/OIDC [Proto] (1) - Industry-standard protocols for authorization and authentication
+- OpenAPI [Proto] (1) - Specification for designing and documenting RESTful APIs
+- OpenSearch [DB] (2) - Community-driven fork of Elasticsearch for search and analytics
+- OpenShift [Plat] (2) - Enterprise Kubernetes platform with developer and operational tools
+- Playwright [Tool] (1) - Modern end-to-end testing framework for web applications
+- pnpm [Tool] (2) - Fast, disk space efficient package manager for Node.js
+- PostgreSQL [DB] (1) - Advanced open source relational database with strong SQL compliance
+- Prettier [Tool] (1) - Opinionated code formatter supporting multiple languages
+- Prometheus [Tool] (2) - Systems monitoring and alerting toolkit with time-series database
+- Python 3 [Lang] (1) - High-level interpreted language known for readability and versatility
+- RabbitMQ [Plat] (1) - Message broker implementing AMQP for reliable message delivery
+- React [Lib] (1) - JavaScript library for building user interfaces with component-based architecture
+- Redis [DB] (1) - In-memory data structure store used as database, cache, and message broker
+- REST [Proto] (1) - Architectural style for designing networked applications using HTTP
+- S3 [Plat] (1) - Object storage service offering scalability, availability, and security
+- SAST [Tool] (2) - Static Application Security Testing for analyzing source code vulnerabilities
+- Scala [Lang] (2) - Multi-paradigm language combining object-oriented and functional programming
+- Shell scripting [Lang] (1) - Command-line scripting for automation and system administration
+- SQL [Lang] (1) - Standardized language for managing and querying relational databases
+- SQLite [DB] (2) - Self-contained, serverless SQL database engine
+- Spring Boot [FW] (1) - Java framework for building production-ready applications with minimal configuration
+- Swift [Lang] (2) - Powerful language for iOS, macOS, and server-side development
+- Tailwind CSS [Lib] (1) - Utility-first CSS framework for rapid UI development
+- Terraform [Tool] (1) - Infrastructure as code tool for building, changing, and versioning infrastructure
+- TypeScript [Lang] (1) - Typed superset of JavaScript that compiles to plain JavaScript
+- Vault [Tool] (2) - Secrets management tool for securing, storing, and controlling access
+- YAML [Format] (1) - Human-readable data serialization format commonly used for configuration
+- Yarn [Tool] (3) - Alternative package manager for Node.js with workspace support
 
 # Unngå
-- AngularJS (1.x) [FW]
-- Angular (2.0+) [FW]
-- Apache Derby [DB]
-- Bower [Tool]
-- CoffeeScript [Lang]
-- Elixir [Lang]
-- Elm [Lang]
-- Grunt [Tool]
-- Gulp [Tool]
-- Java 11 [Lang]
-- Java 17 [Lang]
-- Java 8 [Lang]
-- Java RMI [Proto]
-- jQuery [Lib]
-- MySQL 5.x [DB]
-- PHP [Lang]
-- Python 2 [Lang]
-- Ruby [Lang]
-- Vue [FW]
-- Webpack [Tool]
+- Active MQ [Plat] (1) - Legacy message broker superseded by more modern alternatives
+- AngularJS (1.x) [FW] (1) - Obsolete framework with no support, migrate to modern alternatives
+- Angular (2.0+) [FW] (2) - Full-featured web framework with steep learning curve and frequent breaking changes
+- Apache Camel [FW] (2) - Integration framework with complex configuration and heavy dependencies
+- Apache Derby [DB] (4) - Discontinued Java database with limited features and support
+- Bower [Tool] (1) - Deprecated package manager replaced by npm and yarn
+- CoffeeScript [Lang] (2) - JavaScript transpiler made obsolete by ES6+ features
+- Elixir [Lang] (2) - Functional language with niche ecosystem and limited adoption
+- Elm [Lang] (3) - Purely functional language with small community and limited libraries
+- FTP [Proto] (1) - Insecure file transfer protocol lacking encryption and modern features
+- Grunt [Tool] (1) - Outdated task runner superseded by npm scripts and modern tools
+- Gulp [Tool] (2) - Task runner with declining usage, replaced by Vite and esbuild
+- Java 11 [Lang] (2) - Older LTS release superseded by Java 17 and 21
+- Java 17 [Lang] (3) - Previous LTS release, migrate to Java 21 for latest features
+- Java 8 [Lang] (1) - Outdated Java version lacking modern language features and security updates
+- Java RMI [Proto] (1) - Legacy remote method invocation replaced by REST and gRPC
+- Jenkins [Tool] (1) - Legacy CI/CD tool with complex plugin management and maintenance overhead
+- jQuery [Lib] (1) - DOM manipulation library obsoleted by modern JavaScript and frameworks
+- MySQL 5.x [DB] (2) - Older MySQL version lacking modern features and performance improvements
+- PHP [Lang] (2) - Language with inconsistent design and security concerns for new projects
+- Python 2 [Lang] (1) - Deprecated Python version with no security updates since 2020
+- Ruby [Lang] (2) - Dynamic language with performance limitations and declining adoption
+- SOAP [Proto] (1) - Heavyweight protocol with complex XML processing, use REST or GraphQL
+- Vue [FW] (3) - Component framework with smaller ecosystem compared to React
+- Webpack [Tool] (2) - Complex bundler with slow build times, migrate to Vite or esbuild
+- XML over JSON [Format] (1) - Verbose format with parsing overhead, prefer JSON for data interchange
 `
 };

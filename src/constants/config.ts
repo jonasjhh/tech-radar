@@ -15,7 +15,7 @@ export function getPhaseConfigs(phaseColors?: RadarTheme['phaseColors']): PhaseC
     {
       key: 'observere',
       title: 'Observere',
-      description: 'Teknologier vi følger med på og utforsker. Disse er interessante, men vi har ikke besluttet å ta i bruk ennå.',
+      description: 'Teknologier vi følger med på og utforsker. Disse er interessante, men vi har ikke besluttet å ta i bruk ennå. Avstand fra sentrum indikerer synkende modenhet.',
       color: colors.observere,
       startAngle: Math.PI,
       endAngle: 3 * Math.PI / 2
@@ -23,7 +23,7 @@ export function getPhaseConfigs(phaseColors?: RadarTheme['phaseColors']): PhaseC
     {
       key: 'prove',
       title: 'Prøve',
-      description: 'Teknologier vi aktivt eksperimenterer med i pilotprosjekter eller begrensede sammenhenger for å evaluere nytte og modenhet.',
+      description: 'Teknologier vi aktivt eksperimenterer med i pilotprosjekter eller begrensede sammenhenger for å evaluere nytte og modenhet. Avstand fra sentrum indikerer synkende modenhet.',
       color: colors.prove,
       startAngle: 3 * Math.PI / 2,
       endAngle: 2 * Math.PI
@@ -31,7 +31,7 @@ export function getPhaseConfigs(phaseColors?: RadarTheme['phaseColors']): PhaseC
     {
       key: 'bruke',
       title: 'Bruke',
-      description: 'Teknologier som er godkjent og anbefalt for bruk i produksjon. Disse er stabile, velprøvde og støttes aktivt.',
+      description: 'Teknologier som er godkjent og anbefalt for bruk i produksjon. Disse er stabile, velprøvde og støttes aktivt. Avstand fra sentrum indikerer synkende modenhet.',
       color: colors.bruke,
       startAngle: 0,
       endAngle: Math.PI / 2
@@ -39,7 +39,7 @@ export function getPhaseConfigs(phaseColors?: RadarTheme['phaseColors']): PhaseC
     {
       key: 'unnga',
       title: 'Unngå',
-      description: 'Teknologier vi faser ut, har evaluert og forkastet, eller aktivt unngår. Nye prosjekter bør ikke bruke disse.',
+      description: 'Teknologier vi faser ut, har evaluert og forkastet, eller aktivt unngår. Nye prosjekter bør ikke bruke disse. Avstand fra sentrum indikerer synkende modenhet.',
       color: colors.unnga,
       startAngle: Math.PI / 2,
       endAngle: Math.PI
